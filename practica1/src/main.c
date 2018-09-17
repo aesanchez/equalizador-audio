@@ -3,7 +3,7 @@
 
 uint16_t counter = 0;
 
-void tick_handler(void* empty)
+void tick_handler()
 {
 	if(counter++ != 20)
 		return;
