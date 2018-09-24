@@ -12,6 +12,7 @@ void tick_handler()
 	clock_tick();
 	char time_str[11];
 	clock_get_time_as_str(time_str);
+	//fix para imprimir en serial
 	time_str[8] = '\r';
 	time_str[9] = '\n';
 	time_str[10] = '\0';//fin de string
