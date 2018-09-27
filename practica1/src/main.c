@@ -1,22 +1,38 @@
 #include "sapi.h"
 #include "clock.h"
 
-uint16_t counter = 0;
+uint16_t tick_interrupt = 0;
+uint8_t tick_dsec = 0;
 char time_lcd[11];
 
 void lcd_loading(void);
 
+//se llama cada 100ms
+void tick_dsec_handler(){
+	clock_get_time_as_str(time_lcd);
+	if(tick_dsec++ == 0){
+		//nuevo segundo
+		lcdGoToXY(4,1);
+		lcdSendStringRaw(time_lcd);
+	}else{
+		//paso un dsec
+		lcdGoToXY(13,1);
+		//referenciar solo la decima de segundo
+		lcdSendStringRaw(time_lcd + 9);
+		if(tick_dsec == 10)
+			tick_dsec = 0;
+	}
+	clock_tick_dsec();
+}
+
 void tick_handler()
 {	
-	if(counter++ != 2)
+	if(tick_interrupt++ < 1)
 		return;
-	//paso una decima de segundo
-	counter = 0;
-	clock_tick_dsec();
-	clock_get_time_as_str(time_lcd);
-	lcdGoToXY(4,1);
-	lcdSendStringRaw(time_lcd);
+	tick_dsec_handler();
+	tick_interrupt = 0;
 }
+
 
 void mylcdInit( uint16_t lineWidth, uint16_t amountOfLines, 
               uint16_t charWidth, uint16_t charHeight ){
@@ -77,6 +93,10 @@ int main(void)
 	tickConfig(50);
 	/* agregar(enganchar) una funcion a la interrupcion de tick */
 	tickCallbackSet(tick_handler, (void*)NULL);
+	/*  print incial */
+	clock_get_time_as_str(time_lcd);
+	lcdGoToXY(4,1);
+	lcdSendStringRaw(time_lcd);
 	while (1){
 	}
 	return 0;
