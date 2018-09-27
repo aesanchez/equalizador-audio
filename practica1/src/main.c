@@ -93,10 +93,7 @@ int main(void)
 	tickConfig(50);
 	/* agregar(enganchar) una funcion a la interrupcion de tick */
 	tickCallbackSet(tick_handler, (void*)NULL);
-	/*  print incial */
-	clock_get_time_as_str(time_lcd);
-	lcdGoToXY(4,1);
-	lcdSendStringRaw(time_lcd);
+	/* loop */
 	while (1){
 	}
 	return 0;
