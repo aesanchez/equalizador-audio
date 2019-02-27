@@ -1,13 +1,7 @@
 #include "board.h"
 #include "fir_q31.h"
 #include "main.h"
-
-//debug con TEC
-#define T_COL0_P 1
-#define T_COL0_P_ 5
-#define T_COL0_GPIO 1
-#define T_COL0_PIN 8
-uint32_t pinStatus = 0;
+#define USAR_FUNCIONES_ASSEMBLER	1
 
 int adcFlag = 0;
 
@@ -82,27 +76,32 @@ void adcInit(void)
 
     //NVIC_EnableIRQ(NVIC_TIMER_IRQ);
     //NVIC_ClearPendingIRQ(NVIC_TIMER_IRQ);
-
-    //Init debug con T_COL0
-    Chip_GPIO_Init(LPC_GPIO_PORT);
-    Chip_SCU_PinMux(T_COL0_P, T_COL0_P_, MD_PUP, FUNC0);
-    Chip_GPIO_SetDir(LPC_GPIO_PORT, T_COL0_GPIO, (1 << T_COL0_PIN), 1);
-    Chip_GPIO_ClearValue(LPC_GPIO_PORT, T_COL0_GPIO, (1 << T_COL0_PIN));
 }
 
+#ifdef lpc4337_m4
 void ADC0_IRQHandler(void)
+#else
+void ADC_IRQHandler(void)
+#endif
 {
-    static uint16_t data;
-    Chip_ADC_ReadValue(LPC_ADC0, ADC_CH1, &data); //leer el resultado borra el flag de int
-    fir_q31_put(&filtro, data);
+	static uint16_t data;
+	Chip_ADC_ReadValue(LPC_ADC, ADC_CH1, &data); //leer el resultado borra el flag de int
 
-    //debug frecuencia de muestreo
-    //Si tenemos frecuencia de muestreo 44000 el osciloscopio debe mostrar una frecuencia de 22000
-    if (pinStatus)
-        Chip_GPIO_SetPinState(LPC_GPIO_PORT, T_COL0_GPIO, T_COL0_PIN, 0);
-    else
-        Chip_GPIO_SetPinState(LPC_GPIO_PORT, T_COL0_GPIO, T_COL0_PIN, 1);
-    pinStatus = (pinStatus+1) % 2;
-
-    adcFlag = 1;
+	static uint32_t cont;
+	cont++;
+	if (cont == 1) {
+		cont = 0;
+#if(USAR_FUNCIONES_ASSEMBLER)
+		asm_fir_q31_put(&filtro1, data);
+        asm_fir_q31_put(&filtro2, data);
+        asm_fir_q31_put(&filtro3, data);
+        asm_fir_q31_put(&filtro4, data);
+#else
+        fir_q31_put(&filtro1, data);	
+        fir_q31_put(&filtro2, data);
+        fir_q31_put(&filtro3, data);
+        fir_q31_put(&filtro4, data);
+#endif
+	}
+    adcFlag=1;
 }

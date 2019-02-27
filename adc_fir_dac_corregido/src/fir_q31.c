@@ -29,6 +29,7 @@ int fir_q31_get(fir_q31_t * f)
 		index = index != 0 ? index-1 : f->num_taps-1;
 		acc += (long long)f->history[index] * f->kernel[i];
 	};
+
 	return acc >> 31;
 }
 

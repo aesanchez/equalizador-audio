@@ -7,7 +7,10 @@
 extern "C" {
 #endif
 
-extern fir_q31_t filtro;
+extern fir_q31_t filtro1;
+extern fir_q31_t filtro2;
+extern fir_q31_t filtro3;
+extern fir_q31_t filtro4;
 
 int main(void);
 
