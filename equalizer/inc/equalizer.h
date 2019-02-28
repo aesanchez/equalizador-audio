@@ -1,11 +1,11 @@
-#ifndef _SIGNAL_H_
-#define _SIGNAL_H_
+#ifndef _EQUALIZER_H_
+#define _EQUALIZER_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void signal_init(void);
+void equalizer_init(void);
 
 #ifdef __cplusplus
 }

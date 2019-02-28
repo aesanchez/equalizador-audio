@@ -25,14 +25,15 @@ int y2;
 int y3;
 int y4;
 
-uint16_t adcFlag = 0;
+uint16_t adc_sample_flag = 0;
 #define SAMPLING_FREQUENCY 44000
 uint16_t analogValue = 0;
 
-void signal_loop(void)
+void equalizer_loop(void)
 {
-	if(adcFlag==0) return;
-	adcFlag = 0;
+	if(adc_sample_flag==0) return;
+	adc_sample_flag = 0;
+	//flag cada 44khz
 #if (USAR_FUNCIONES_ASSEMBLER)
 	y1 = asm_fir_q31_get(&filtro1) - 512;
 	y2 = asm_fir_q31_get(&filtro2);
@@ -54,14 +55,16 @@ void signal_loop(void)
 	else if (y < 0)
 		y = 0;
 	dacWrite(DAC, y);
-	//debug
+	//debug para frecuencia de señal
 	gpioToggle(T_COL0);
 }
 
 void *sampling_interrupt(void)
 {
+	//deberia preguntar 400khz y y estoy leyendo a 44khz
 	Chip_ADC_ReadValue(LPC_ADC0, ADC_CH1, &analogValue);
 	Chip_ADC_SetStartMode(LPC_ADC0, ADC_START_NOW, ADC_TRIGGERMODE_RISING); //repetir conversion
+
 #if(USAR_FUNCIONES_ASSEMBLER)
 		asm_fir_q31_put(&filtro1, analogValue);
         asm_fir_q31_put(&filtro2, analogValue);
@@ -73,10 +76,11 @@ void *sampling_interrupt(void)
         fir_q31_put(&filtro3, analogValue);
         fir_q31_put(&filtro4, analogValue);
 #endif
-	adcFlag=1;	
+
+	adc_sample_flag=1;	
 }
 
-void signal_init(void)
+void equalizer_init(void)
 {
 	fir_q31_init(&filtro1, history_1, filter1_taps, FILTER1_TAP_NUM);
 	fir_q31_init(&filtro2, history_2, filter2_taps, FILTER2_TAP_NUM);
@@ -87,6 +91,8 @@ void signal_init(void)
 	Chip_ADC_EnableChannel(LPC_ADC0, ADC_CH1, ENABLE);
 	Chip_ADC_Int_SetChannelCmd(LPC_ADC0, ADC_CH1, ENABLE);
 	Chip_ADC_SetStartMode(LPC_ADC0, ADC_START_NOW, ADC_TRIGGERMODE_RISING); //iniciar conversion
+
 	dacConfig(DAC_ENABLE);
+
 	Timer_Init(0, (EDU_CIAA_NXP_CLOCK_SPEED / SAMPLING_FREQUENCY), sampling_interrupt);
 }
