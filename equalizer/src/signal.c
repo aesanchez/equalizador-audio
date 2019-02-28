@@ -1,5 +1,6 @@
 #include "sapi.h"
 #include "sapi_timer.h"
+#include "menu.h"
 #include "filter1.h"
 #include "filter2.h"
 #include "filter3.h"
@@ -23,6 +24,7 @@ int y1;
 int y2;
 int y3;
 int y4;
+
 uint16_t adcFlag = 0;
 #define SAMPLING_FREQUENCY 44000
 uint16_t analogValue = 0;
@@ -42,6 +44,10 @@ void signal_loop(void)
 	y3 = fir_q31_get(&filtro3);
 	y4 = fir_q31_get(&filtro4);
 #endif
+	y1 = (int)(y1 * menu_get_level(0));
+	y2 = (int)(y2 * menu_get_level(1));
+	y3 = (int)(y3 * menu_get_level(2));
+	y4 = (int)(y4 * menu_get_level(3));
 	y = (y1 + y2 + y3 + y4) + 512;
 	if (y > 1023)
 		y = 1023;

@@ -13,9 +13,9 @@
 void menu_start(void);
 void menu_print(void);
 void menu_loop(void);
-void menu_move_up(void);
-void menu_move_down(void);
-float menu_get_level(void);
+void menu_scroll_up(void);
+void menu_scroll_down(void);
+float menu_get_level(int);
 
 char current_option = 0;
 char previous_key_pressed = 0;
@@ -46,13 +46,17 @@ void menu_print()
 	lcdSendStringRaw(menu[current_option]);
 	if (current_option != MENU_SIZE - 1)
 	{
-		if(level[current_option]!= 0) lcdSendStringRaw(" -");
-		else lcdSendStringRaw(" ");
-		str[0] = level[current_option] / 10 + '0';
-		str[1] = level[current_option] % 10 + '0';
-		str[2] = '\0';
-		lcdSendStringRaw(str);
-		lcdSendStringRaw(" dB");
+		if(level[current_option] == 22){
+			lcdSendStringRaw(" OFF");
+		}else{
+			if(level[current_option]!= 0) lcdSendStringRaw(" -");
+			else lcdSendStringRaw(" ");
+			str[0] = level[current_option] / 10 + '0';
+			str[1] = level[current_option] % 10 + '0';
+			str[2] = '\0';
+			lcdSendStringRaw(str);
+			lcdSendStringRaw(" dB");
+		}		
 	}
 	lcdGoToXY(1, 2);
 	lcdSendStringRaw(menu[(current_option + 1) % MENU_SIZE]);
@@ -64,11 +68,9 @@ void menu_loop()
 		previous_key_pressed = 1;
 	else
 	{
-		//no es apretada
-		//se solto?
 		if (previous_key_pressed == 1)
 		{
-			menu_move_up();
+			menu_scroll_up();
 			menu_print();
 			previous_key_pressed = 0;
 		}
@@ -77,11 +79,9 @@ void menu_loop()
 		previous_key_pressed = 2;
 	else
 	{
-		//no es apretada
-		//se solto?
 		if (previous_key_pressed == 2)
 		{
-			menu_move_down();
+			menu_scroll_down();
 			menu_print();
 			previous_key_pressed = 0;
 		}
@@ -90,8 +90,6 @@ void menu_loop()
 		previous_key_pressed = 3;
 	else
 	{
-		//no es apretada
-		//se solto?
 		if (previous_key_pressed == 3)
 		{
 			if (current_option != MENU_SIZE - 1)
@@ -107,13 +105,11 @@ void menu_loop()
 		previous_key_pressed = 4;
 	else
 	{
-		//no es apretada
-		//se solto?
 		if (previous_key_pressed == 4)
 		{
 			if (current_option != MENU_SIZE - 1)
 			{
-				if (level[current_option] != 20)
+				if (level[current_option] != 22)
 					level[current_option]+=2;
 				menu_print();
 			}
@@ -124,8 +120,6 @@ void menu_loop()
 		previous_key_pressed = 5;
 	else
 	{
-		//no es apretada
-		//se solto?
 		if (previous_key_pressed == 5)
 		{
 			if (current_option == MENU_SIZE - 1)
@@ -141,14 +135,14 @@ void menu_loop()
 	}
 }
 
-void menu_move_up()
+void menu_scroll_up()
 {
 	if (current_option == 0)
 		current_option = MENU_SIZE - 1;
 	else
 		current_option -= 1;
 }
-void menu_move_down()
+void menu_scroll_down()
 {
 	if (current_option == MENU_SIZE - 1)
 		current_option = 0;
@@ -156,6 +150,7 @@ void menu_move_down()
 		current_option += 1;
 }
 
-float menu_get_level(){
-	return db_table[level[0]/2];
+float menu_get_level(int band){
+	if(band < 0 || band > 3) return 0;
+	return db_table[level[band]/2];
 }

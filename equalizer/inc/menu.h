@@ -7,7 +7,7 @@ extern "C" {
 
 void menu_start(void);
 void menu_loop(void);
-float menu_get_level(void);
+float menu_get_level(int);
 
 #ifdef __cplusplus
 }
