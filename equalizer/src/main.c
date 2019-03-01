@@ -1,23 +1,22 @@
 #include "sapi.h"
-#include "menu.h"
-#include "my_lcd.h"
+#include "ui.h"
 #include "equalizer.h"
 
 int main(void)
 {
 	boardConfig();
-	my_lcd_init();
-	menu_start();
+	
 	equalizer_init();	
+	ui_init();
 
-	delay_t lcd_delay;
-	delayConfig(&lcd_delay, 50);
+	delay_t ui_delay;
+	delayConfig(&ui_delay, 50);
 
 	while (1)
 	{
 		equalizer_loop();
-		if (delayRead(&lcd_delay))
-			menu_loop();
+		if (delayRead(&ui_delay))
+			ui_loop();
 	}
 	return 0;
 }

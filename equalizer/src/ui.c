@@ -1,6 +1,7 @@
-#include "menu.h"
+#include "ui.h"
+#include "my_lcd.h"
 #include "sapi.h"
-#include "db_table.h"
+#include "equalizer.h"
 
 #define TEC_UP GPIO8
 #define TEC_RIGHT GPIO7
@@ -12,44 +13,43 @@
 #define MENU_SIZE 5
 #define RESET_OPTION (MENU_SIZE - 1)
 
-void menu_start(void);
-void menu_print(void);
-void menu_loop(void);
-void menu_scroll_up(void);
-void menu_scroll_down(void);
-float menu_get_level(int);
+void ui_init(void);
+void ui_print(void);
+void ui_loop(void);
+void ui_scroll_up(void);
+void ui_scroll_down(void);
 
 char current_option = 0;
 char previous_key_pressed = NO_KEY;
 
-const char *menu[MENU_SIZE] = {
+const char * menu[MENU_SIZE] = {
 	"Banda 1",
 	"Banda 2",
 	"Banda 3",
 	"Banda 4",
 	"Reset"};
 
-char band_levels[4] = {0, 0, 0, 0};
 char str[3];
 
-void menu_start()
+void ui_init()
 {
+	my_lcd_init();
 	gpioConfig(TEC_UP, GPIO_INPUT_PULLUP);
 	gpioConfig(TEC_RIGHT, GPIO_INPUT_PULLUP);
 	gpioConfig(TEC_OK, GPIO_INPUT_PULLUP);
 	gpioConfig(TEC_DOWN, GPIO_INPUT_PULLUP);
 	gpioConfig(TEC_LEFT, GPIO_INPUT_PULLUP);
-	menu_print();
+	ui_print();
 }
 
-void menu_print()
+void ui_print()
 {
 	lcdClear();
 	lcdSendStringRaw(">>");
 	lcdSendStringRaw(menu[current_option]);
 	if (current_option != RESET_OPTION)
 	{
-		if (band_levels[current_option] == 22)
+		if (band_levels[current_option] == 11)
 		{
 			lcdSendStringRaw(" OFF");
 		}
@@ -59,8 +59,8 @@ void menu_print()
 				lcdSendStringRaw(" -");
 			else
 				lcdSendStringRaw(" ");
-			str[0] = band_levels[current_option] / 10 + '0';
-			str[1] = band_levels[current_option] % 10 + '0';
+			str[0] = (band_levels[current_option]*2) / 10 + '0';
+			str[1] = (band_levels[current_option]*2) % 10 + '0';
 			str[2] = '\0';
 			lcdSendStringRaw(str);
 			lcdSendStringRaw(" dB");
@@ -70,14 +70,14 @@ void menu_print()
 	lcdSendStringRaw(menu[(current_option + 1) % MENU_SIZE]);
 }
 
-void menu_loop()
+void ui_loop()
 {
 	if (!gpioRead(TEC_UP))
 		previous_key_pressed = TEC_UP;
 	else if (previous_key_pressed == TEC_UP)
 	{
-		menu_scroll_up();
-		menu_print();
+		ui_scroll_up();
+		ui_print();
 		previous_key_pressed = NO_KEY;
 	}
 
@@ -85,8 +85,8 @@ void menu_loop()
 		previous_key_pressed = TEC_DOWN;
 	else if (previous_key_pressed == TEC_DOWN)
 	{
-		menu_scroll_down();
-		menu_print();
+		ui_scroll_down();
+		ui_print();
 		previous_key_pressed = NO_KEY;
 	}
 
@@ -97,8 +97,8 @@ void menu_loop()
 		if (current_option != RESET_OPTION)
 		{
 			if (band_levels[current_option] != 0)
-				band_levels[current_option] -= 2;
-			menu_print();
+				band_levels[current_option]--;
+			ui_print();
 		}
 		previous_key_pressed = NO_KEY;
 	}
@@ -109,9 +109,9 @@ void menu_loop()
 	{
 		if (current_option != RESET_OPTION)
 		{
-			if (band_levels[current_option] != 22)
-				band_levels[current_option] += 2;
-			menu_print();
+			if (band_levels[current_option] != 11)
+				band_levels[current_option]++;
+			ui_print();
 		}
 		previous_key_pressed = NO_KEY;
 	}
@@ -127,25 +127,18 @@ void menu_loop()
 			band_levels[2] = 0;
 			band_levels[3] = 0;
 		}
-		menu_print();
+		ui_print();
 		previous_key_pressed = NO_KEY;
 	}	
 }
 
-void menu_scroll_up()
+void ui_scroll_up()
 {
 	if (current_option == 0)
 		current_option = MENU_SIZE;
 	current_option--;
 }
-void menu_scroll_down()
+void ui_scroll_down()
 {
 	current_option = (current_option + 1) % MENU_SIZE;
-}
-
-float menu_get_level(int band)
-{
-	if (band < 0 || band > 3)
-		return 0;
-	return db_table[band_levels[band] / 2];
 }

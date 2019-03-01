@@ -1,11 +1,12 @@
 #include "sapi.h"
 #include "sapi_timer.h"
-#include "menu.h"
+#include "ui.h"
 #include "filter1.h"
 #include "filter2.h"
 #include "filter3.h"
 #include "filter4.h"
 #include "fir_q31.h"
+#include "db_table.h"
 
 #define USAR_FUNCIONES_ASSEMBLER 1
 
@@ -24,6 +25,8 @@ int y1;
 int y2;
 int y3;
 int y4;
+
+uint16_t band_levels[4] = {0,0,0,0};
 
 uint16_t adc_sample_flag = 0;
 #define SAMPLING_FREQUENCY 44000
@@ -45,10 +48,10 @@ void equalizer_loop(void)
 	y3 = fir_q31_get(&filtro3);
 	y4 = fir_q31_get(&filtro4);
 #endif
-	y1 = (int)(y1 * menu_get_level(0));
-	y2 = (int)(y2 * menu_get_level(1));
-	y3 = (int)(y3 * menu_get_level(2));
-	y4 = (int)(y4 * menu_get_level(3));
+	y1 = (int)(y1 * db_table[band_levels[0]]);
+	y2 = (int)(y2 * db_table[band_levels[1]]);
+	y3 = (int)(y3 * db_table[band_levels[2]]);
+	y4 = (int)(y4 * db_table[band_levels[3]]);
 	y = (y1 + y2 + y3 + y4) + 512;
 	if (y > 1023)
 		y = 1023;
