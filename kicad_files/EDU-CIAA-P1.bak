@@ -1,0 +1,199 @@
+EESchema Schematic File Version 4
+LIBS:equalizador_audio-cache
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 6 7
+Title "Poncho Equalizador de Audio"
+Date "2018-11-01"
+Rev "1.0"
+Comp "Taller de Proyecto 1 - UNLP"
+Comment1 "Grupo 11"
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+Text HLabel 4750 3050 0    60   BiDi ~ 0
+ADC1
+Text HLabel 4750 3150 0    60   BiDi ~ 0
+DAC
+NoConn ~ 6500 4150
+NoConn ~ 6500 4050
+NoConn ~ 5300 3550
+NoConn ~ 5300 3450
+NoConn ~ 5300 3350
+NoConn ~ 6500 2650
+NoConn ~ 5300 2850
+NoConn ~ 5300 2950
+Wire Wire Line
+	5300 3050 4750 3050
+Wire Wire Line
+	5300 3150 4750 3150
+NoConn ~ 5300 3650
+NoConn ~ 5300 3750
+NoConn ~ 5300 3850
+NoConn ~ 5300 3950
+NoConn ~ 5300 4050
+NoConn ~ 5300 4150
+NoConn ~ 5300 4250
+NoConn ~ 5300 4350
+NoConn ~ 5300 2550
+NoConn ~ 5300 2650
+$Comp
+L equalizador_audio-rescue:Conn_Poncho2P_2x_20x2-poncho_grande-rescue-equalizador_audio-rescue XA?
+U 1 1 5C01F3B5
+P 5550 2750
+AR Path="/560A0C15/5C01F3B5" Ref="XA?"  Part="1" 
+AR Path="/5C01F3B5" Ref="XA?"  Part="1" 
+AR Path="/5C00BF5E/5C01F3B5" Ref="XA1"  Part="1" 
+F 0 "XA1" H 5850 3150 60  0000 C CNN
+F 1 "Conn_Poncho2P_2x_20x2" H 5900 1050 60  0000 C CNN
+F 2 "Poncho_Esqueleto:Conn_Poncho_Completo" H 5850 950 60  0000 C CNN
+F 3 "" H 5550 2750 60  0000 C CNN
+	1    5550 2750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6500 2750 6500 2850
+Wire Wire Line
+	6500 2850 6500 2950
+Connection ~ 6500 2850
+Wire Wire Line
+	6500 3050 6500 2950
+Connection ~ 6500 3050
+Connection ~ 6500 2950
+Wire Wire Line
+	6500 3050 6500 3150
+Connection ~ 6500 3150
+Wire Wire Line
+	6500 3150 6500 3250
+Wire Wire Line
+	6500 2750 6850 2750
+Wire Wire Line
+	6850 2750 6850 2850
+Connection ~ 6500 2750
+$Comp
+L power:GNDA #PWR0107
+U 1 1 5BEFBFB9
+P 6850 2850
+F 0 "#PWR0107" H 6850 2600 50  0001 C CNN
+F 1 "GNDA" H 6855 2677 50  0000 C CNN
+F 2 "" H 6850 2850 50  0001 C CNN
+F 3 "" H 6850 2850 50  0001 C CNN
+	1    6850 2850
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:PWR_FLAG #FLG0101
+U 1 1 5BEFC046
+P 6850 2750
+F 0 "#FLG0101" H 6850 2825 50  0001 C CNN
+F 1 "PWR_FLAG" H 6850 2924 50  0000 C CNN
+F 2 "" H 6850 2750 50  0001 C CNN
+F 3 "~" H 6850 2750 50  0001 C CNN
+	1    6850 2750
+	1    0    0    -1  
+$EndComp
+Connection ~ 6850 2750
+$Comp
+L power:+3.3VA #PWR0109
+U 1 1 5BEFC4F8
+P 5050 3250
+F 0 "#PWR0109" H 5050 3100 50  0001 C CNN
+F 1 "+3.3VA" H 5065 3423 50  0000 C CNN
+F 2 "" H 5050 3250 50  0001 C CNN
+F 3 "" H 5050 3250 50  0001 C CNN
+	1    5050 3250
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	6500 3350 6500 3450
+Wire Wire Line
+	6500 3450 6500 3550
+Connection ~ 6500 3450
+Wire Wire Line
+	6500 3550 6500 3650
+Connection ~ 6500 3550
+Wire Wire Line
+	6500 3650 6500 3750
+Connection ~ 6500 3650
+Wire Wire Line
+	6500 3750 6500 3850
+Connection ~ 6500 3750
+Wire Wire Line
+	6500 3850 6500 3950
+Connection ~ 6500 3850
+Wire Wire Line
+	6500 4250 6500 4350
+Connection ~ 6500 3350
+$Comp
+L power:GND #PWR0110
+U 1 1 5BEFE86C
+P 6850 3450
+F 0 "#PWR0110" H 6850 3200 50  0001 C CNN
+F 1 "GND" H 6855 3277 50  0000 C CNN
+F 2 "" H 6850 3450 50  0001 C CNN
+F 3 "" H 6850 3450 50  0001 C CNN
+	1    6850 3450
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:PWR_FLAG #FLG0103
+U 1 1 5BEFE8BE
+P 6850 3350
+F 0 "#FLG0103" H 6850 3425 50  0001 C CNN
+F 1 "PWR_FLAG" H 6850 3524 50  0000 C CNN
+F 2 "" H 6850 3350 50  0001 C CNN
+F 3 "~" H 6850 3350 50  0001 C CNN
+	1    6850 3350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6850 3350 6850 3450
+Connection ~ 6850 3350
+$Comp
+L power:+5V #PWR0114
+U 1 1 5BF000DB
+P 6600 2450
+F 0 "#PWR0114" H 6600 2300 50  0001 C CNN
+F 1 "+5V" H 6615 2623 50  0000 C CNN
+F 2 "" H 6600 2450 50  0001 C CNN
+F 3 "" H 6600 2450 50  0001 C CNN
+	1    6600 2450
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR0115
+U 1 1 5BF0045D
+P 5150 2450
+F 0 "#PWR0115" H 5150 2300 50  0001 C CNN
+F 1 "+3.3V" H 5165 2623 50  0000 C CNN
+F 2 "" H 5150 2450 50  0001 C CNN
+F 3 "" H 5150 2450 50  0001 C CNN
+	1    5150 2450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5300 2450 5150 2450
+Wire Wire Line
+	6600 2450 6500 2450
+$Comp
+L power:GNDA #PWR0116
+U 1 1 5BF00BB8
+P 5050 2750
+F 0 "#PWR0116" H 5050 2500 50  0001 C CNN
+F 1 "GNDA" H 5055 2577 50  0000 C CNN
+F 2 "" H 5050 2750 50  0001 C CNN
+F 3 "" H 5050 2750 50  0001 C CNN
+	1    5050 2750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5300 2750 5050 2750
+Wire Wire Line
+	5050 3250 5300 3250
+Wire Wire Line
+	6500 3350 6850 3350
+NoConn ~ 6500 2550
+$EndSCHEMATC
